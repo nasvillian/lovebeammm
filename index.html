@@ -107,7 +107,8 @@ label{display:block;font-weight:800;margin:18px 0 8px}input[type=text],input[typ
 <label for="email">이메일</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="name@example.com">
 <div class="notice">수집 항목: 이름, 이메일 · 이용 목적: 진단 참여 및 치유라이팅 콘텐츠 안내 · 보유 기간: 수신 거부 또는 삭제 요청 시까지</div>
 <label class="check"><input id="privacy" type="checkbox" required><span>개인정보 수집·이용에 동의해요. (필수)</span></label>
-<label class="check"><input id="marketing" type="checkbox"><span>치유라이팅 이메일 수신에 동의해요. (선택)</span></label>
+<p class="notice">이 무료 탐사는 치유라이팅 이메일 구독과 함께 제공돼. 아래 두 항목에 모두 동의하면 시작할 수 있어. 이메일은 언제든 수신거부할 수 있어.</p>
+<label class="check"><input id="marketing" type="checkbox" required><span>치유라이팅 콘텐츠·상품 안내 이메일 수신에 동의해요. (필수 · 언제든 수신거부 가능)</span></label>
 <div id="leadError" class="error" role="alert"></div>
 <button id="submitLead" class="btn btn-primary" type="submit">무료 탐사 탑승권 발급하기 🚀</button>
 </form></main></div></section>
@@ -212,6 +213,7 @@ const $=s=>document.querySelector(s);
 function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");window.scrollTo(0,0)}
 document.querySelectorAll(".start-trigger").forEach(b=>b.onclick=()=>show("lead"));document.querySelectorAll(".story-trigger").forEach(b=>b.onclick=()=>document.querySelector("#lovebeam-story").scrollIntoView({behavior:"smooth"}));
 $("#leadForm").onsubmit=async e=>{e.preventDefault();const err=$("#leadError"),btn=$("#submitLead");err.classList.remove("show");if(!$("#privacy").checked){err.textContent="개인정보 수집·이용 동의가 필요해.";err.classList.add("show");return}
+if(!$("#marketing").checked){err.textContent="무료 탐사는 개인정보 수집·이용과 치유라이팅 콘텐츠·상품 안내 이메일 수신에 모두 동의해야 시작할 수 있어.";err.classList.add("show");return}
 btn.disabled=true;btn.textContent="탑승권 발급 중…";
 try{const payload={name:$("#name").value.trim(),email:$("#email").value.trim(),marketing:$("#marketing").checked,listId:"516914"};
 if(DEMO_MODE){localStorage.setItem("lovebeam_lead",JSON.stringify(payload));}
