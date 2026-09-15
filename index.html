@@ -164,8 +164,8 @@ label{display:block;font-weight:800;margin:18px 0 8px}input[type=text],input[typ
 </main></div></section>
 
 <script>
-const SUBSCRIBE_ENDPOINT="";
-const DEMO_MODE=true; // 스티비 중계 주소 연결 후 false로 바꿔 운영
+const SUBSCRIBE_ENDPOINT="https://hook.eu1.make.com/9yttypd373drafnapwukqezkv4yf2ngg";
+const DEMO_MODE=false; // Make에서 스티비 저장 확인 후 success:true 응답 필요
 const typeData={
 "애정":{desc:"연락과 표현이 줄어들 때 사랑까지 사라진 것처럼 느껴질 수 있어. 그건 네가 부족해서가 아니라, 관계가 끊길까 두려웠던 아이가 사랑의 증거를 찾는 반응일 수 있어.",words:"떠날까 봐 무서웠구나. 내가 네 마음을 들을게. 확인받기 전에도 너는 사랑받을 가치가 있어.",action:"상대의 마음을 확인하는 메시지를 보내기 전, 10분 동안 지금의 감정과 두려움을 적고 몸을 편안하게 돌봐줘."},
 "안전":{desc:"좋은 순간에도 곧 나쁜 일이 생길까 긴장한다면, 내면아이는 아직 세상을 충분히 안전하다고 느끼지 못하는 중일 수 있어.",words:"지금 긴장하고 있구나. 오늘의 나는 너를 지킬 수 있어. 여기에서 천천히 쉬어도 괜찮아.",action:"발바닥이 바닥에 닿는 감각, 보이는 것 다섯 가지, 들리는 소리 세 가지를 확인하며 지금의 안전을 몸으로 느껴봐."},
@@ -215,7 +215,7 @@ $("#leadForm").onsubmit=async e=>{e.preventDefault();const err=$("#leadError"),b
 btn.disabled=true;btn.textContent="탑승권 발급 중…";
 try{const payload={name:$("#name").value.trim(),email:$("#email").value.trim(),marketing:$("#marketing").checked,listId:"516914"};
 if(DEMO_MODE){localStorage.setItem("lovebeam_lead",JSON.stringify(payload));}
-else{if(!SUBSCRIBE_ENDPOINT)throw new Error("이메일 저장 연결이 아직 준비되지 않았어.");const res=await fetch(SUBSCRIBE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!res.ok){let m="이메일 저장에 실패했어. 잠시 후 다시 시도해줘.";try{const d=await res.json();m=d.message||m}catch{}throw new Error(m)}}
+else{if(!SUBSCRIBE_ENDPOINT)throw new Error("이메일 저장 연결이 아직 준비되지 않았어.");const res=await fetch(SUBSCRIBE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});let data;try{data=await res.json()}catch{throw new Error("이메일 등록 확인 응답을 받지 못했어. 잠시 후 다시 시도해줘.")}if(!res.ok||data.success!==true)throw new Error(data.message||"이메일 등록이 완료되지 않았어. 입력한 내용은 유지되니 잠시 후 다시 시도해줘.");}
 index=0;render();show("quiz")}catch(ex){err.textContent=ex.message;err.classList.add("show")}finally{btn.disabled=false;btn.textContent="무료 탐사 탑승권 발급하기 🚀"}};
 function render(){if(index<0)index=0;if(index>=raw.length){finish();return}$("#counter").textContent="탐사 좌표 "+(index+1)+" / "+raw.length;$("#progressBar").style.width=((index+1)/raw.length*100)+"%";$("#progressShip").style.left=Math.min(94,((index+1)/raw.length*94))+"%";$("#question").textContent=raw[index][1];$("#answers").innerHTML=["전혀 아니다","조금 그렇다","꽤 그렇다","매우 그렇다"].map((t,i)=>'<button class="answer '+(answers[index]===i?"selected":"")+'" data-v="'+i+'">'+t+'</button>').join("");document.querySelectorAll(".answer").forEach(b=>b.onclick=()=>{answers[index]=Number(b.dataset.v);render()});$("#nextBtn").disabled=answers[index]===null;$("#nextBtn").textContent=index===raw.length-1?"내면아이 좌표 확인":"다음 좌표";$("#prevBtn").disabled=index===0;$("#quizError").classList.remove("show")}
 function openSignal(){const stage=index===9?1:2;pendingSignal=true;seenSignals.add(index);$("#signalCode").textContent="SIGNAL 0"+stage+" · "+(index+1)+" / 30";$("#signalTitle").textContent=stage===1?"첫 번째 내면 신호를 발견했어.":"두 번째 내면 신호가 도착했어.";$("#signalText").textContent=stage===1?"여기까지 온 것만으로도 너는 이미 마음을 외면하지 않는 연습을 시작했어. 내면아이 행성까지 20개의 좌표가 남았어.":"이제 네 반응의 패턴이 조금씩 보이기 시작했어. 마지막 10개의 신호를 따라가면 가장 필요한 사랑의 좌표를 만날 수 있어.";$("#signalOverlay").classList.add("show")}
